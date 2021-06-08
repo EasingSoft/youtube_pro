@@ -1,7 +1,4 @@
-# This workflow will build a Java project with Gradle
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Gradle
 
 on:
   push:
@@ -12,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +18,15 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+        
+    - name: Build
+      run: cmd.exe /c gradlew.bat assembleRelease
+
+    - name: Sign
+      run: cmd.exe /c java.exe -jar "signer\ApkSigner.jar" sign --key "signer\apkeasytool.pk8" --cert "signer\apkeasytool.pem"  --v4-signing-enabled false --out "%cd%/app/build/outputs/apk/release/youtube_pro_signed.apk" "%cd%/app/build/outputs/apk/release/app-release-unsigned.apk"
+      
+    - name: Upload
+      uses: actions/upload-artifact@v1
+      with:
+          name: app
+          path: "app/build/outputs/apk/release/youtube_pro_signed.apk"
