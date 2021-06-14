@@ -92,7 +92,7 @@ public class MainActivity extends  Activity {
 	
 	private void initializeLogic() {
 		if (SketchwareUtil.isConnected(getApplicationContext())) {
-			web.loadUrl("https://youtube.com");
+			web.loadUrl("https://youtube.com/");
 		}
 		else {
 			web.loadUrl("file:///android_asset/noin.html");
@@ -114,6 +114,16 @@ public class MainActivity extends  Activity {
 		}
 	}
 	
+	
+	@Override
+	public void onBackPressed() {
+		if (web.canGoBack()) {
+			web.goBack();
+		}
+		else {
+			finish();
+		}
+	}
 	public void _pip () {
 		 }
 	@Override
@@ -226,13 +236,13 @@ public class MainActivity extends  Activity {
 					 }
 		
 		  @JavascriptInterface
-		    public void downvid(String fk) {    
-			DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-			    Uri uri = Uri.parse(fk);
+		    public void downvid(String namee,String urll) {    
+			    DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+			    Uri uri = Uri.parse(urll);
 			    DownloadManager.Request request = new DownloadManager.Request(uri);
 			    request.setVisibleInDownloadsUi(true);
 			    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-			    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uri.getLastPathSegment());
+			    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, namee);
 			    downloadManager.enqueue(request);
 			
 			    }
@@ -246,23 +256,7 @@ public class MainActivity extends  Activity {
 				
 				                try {
 					
-					                    Rational rational = new Rational(web.getWidth(), 405);
-					
-					
-					
-					
-					
-					                    PictureInPictureParams mParams =
-					
-					                            new PictureInPictureParams.Builder()
-					
-					                                    .setAspectRatio(rational)
-					
-					                                    .build();
-					
-					
-					
-					                    enterPictureInPictureMode(mParams);
+					                    enterPictureInPictureMode();
 					
 					                } catch (IllegalStateException e) {
 					
@@ -352,4 +346,4 @@ public class MainActivity extends  Activity {
 		return getResources().getDisplayMetrics().heightPixels;
 	}
 	
-}
+}
